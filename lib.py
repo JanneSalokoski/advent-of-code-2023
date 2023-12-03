@@ -21,11 +21,26 @@ def get_input():
     with open(file, "r") as f:
         return f.read().strip()
 
+def get_sample():
+    """Read sample imput instead of real input"""
+    file = os.path.join("./inputs/", inspect.stack()[3].filename.replace(".py", "-sample.txt"))
+    with open(file, "r") as f:
+        return f.read().strip()
+
 def aoc_input(func):
     """Call `func` with aoc-input as an argument"""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         text = get_input()
+        return func(*args, text=text, **kwargs)
+
+    return wrapper
+
+def aoc_sample(func):
+    """Call `func` with aoc-sample as an argument"""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        text = get_sample()
         return func(*args, text=text, **kwargs)
 
     return wrapper
