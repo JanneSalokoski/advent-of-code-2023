@@ -21,13 +21,15 @@ def timer(func):
 def get_input():
     """Read input for the days script from file and strip it"""
     file = os.path.join("./inputs/", inspect.stack()[3].filename.replace(".py", ".txt"))
-    logger.critical(f"Reading input from: {file}")
+    #file = f"./inputs/{inspect.stack()[3].filename.replace(".py", ".txt")}"
+    logger.debug(f"Reading input from: {file}")
     with open(file, "r") as f:
         return f.read().strip()
 
 def get_sample():
     """Read sample imput instead of real input"""
     file = os.path.join("./inputs/", inspect.stack()[3].filename.replace(".py", "-sample.txt"))
+    #file = f"./inputs/{inspect.stack()[3].filename.replace(".py", "-sample.txt")}"
     logger.debug(f"Reading input from: {file}")
     with open(file, "r") as f:
         return f.read().strip()
