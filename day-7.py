@@ -60,9 +60,13 @@ class Hand:
 
         self.cards = self.get_cards(text.split(" ")[0])
         self.bid = int(text.split(" ")[1])
-        self.type = self.get_type(self.cards)
 
-        log.debug(f"{self.text} -> {self.type}")
+        if self.part == 1:
+            self.type = self.get_type_1(self.cards)
+        else:
+            self.type = self.get_type_2(self.cards)
+
+        #log.debug(f"{self.text} -> {self.type}")
 
     def get_card(self, letter):
         if self.part == 1:
@@ -102,7 +106,7 @@ class Hand:
     def get_cards(self, text):
         return [self.get_card(c) for c in text]
 
-    def get_type(self, cards):
+    def get_type_2(self, cards):
         amounts = [0]
         lst_of_cards = [card for card in cards if card.name != "JOKER"]
         set_of_cards = set(lst_of_cards)
@@ -118,6 +122,27 @@ class Hand:
 
         maximum = max(amounts)
 
+        if maximum == 5:
+            return Type.FIVE
+        elif maximum == 4:
+            return Type.FOUR
+        elif 3 in amounts and 2 in amounts:
+            return Type.HOUSE
+        elif maximum == 3:
+            return Type.THREE
+        elif amounts.count(2) == 2:
+            return Type.TWO_PAIR
+        elif maximum == 2:
+            return Type.PAIR
+        else:
+            return Type.HIGH
+
+    def get_type_1(self, cards):
+        amounts = []
+        for card in set(cards):
+            amounts.append(cards.count(card))
+
+        maximum = max(amounts)
         if maximum == 5:
             return Type.FIVE
         elif maximum == 4:
@@ -163,10 +188,14 @@ class Hand:
 
 #@lib.aoc_sample
 @lib.aoc_input
-def parse_input(text=""):
-    #text = "23456 100\nJ2345 100\nJJ234 100"
+def parse_input_1(text=""):
     lines = text.split("\n")
-    return [Hand(line) for line in lines]
+    return [Hand(line, part=1) for line in lines]
+
+@lib.aoc_input
+def parse_input_2(text=""):
+    lines = text.split("\n")
+    return [Hand(line, part=2) for line in lines]
 
 @lib.timer
 def part_1(hands):
@@ -177,7 +206,7 @@ def part_1(hands):
     sorted_hands = sorted(hands)
     for i, hand in enumerate(sorted_hands):
         rank = i+1
-        log.debug(f"{hand} -> rank {rank} * bid {hand.bid} = {rank*hand.bid}")        
+        #log.debug(f"{hand} -> rank {rank} * bid {hand.bid} = {rank*hand.bid}")        
         score += rank * hand.bid
 
     return score
@@ -191,20 +220,18 @@ def part_2(hands):
     sorted_hands = sorted(hands)
     for i, hand in enumerate(sorted_hands):
         rank = i+1
-        log.debug(f"{hand} -> rank {rank} * bid {hand.bid} = {rank*hand.bid}")        
+        #log.debug(f"{hand} -> rank {rank} * bid {hand.bid} = {rank*hand.bid}")        
         score += rank * hand.bid
 
     return score
 
 def main():
-    hands = parse_input()
-
-    p1 = part_1(hands)
+    p1 = part_1(parse_input_1())
     print(f"Day 7 - Part 1 result: {p1}")
 
     print()
 
-    p2 = part_2(hands)
+    p2 = part_2(parse_input_2())
     print(f"Day 7 - Part 2 result: {p2}")
 
 main()
