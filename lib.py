@@ -20,7 +20,7 @@ def timer(func):
 
 def get_input():
     """Read input for the days script from file and strip it"""
-    file = os.path.join("./inputs/", inspect.stack()[3].filename.replace(".py", ".txt"))
+    file = os.path.join("./inputs/", inspect.stack()[3].filename.split("/")[-1].replace(".py", ".txt"))
     #file = f"./inputs/{inspect.stack()[3].filename.replace(".py", ".txt")}"
     logger.debug(f"Reading input from: {file}")
     with open(file, "r") as f:
@@ -28,7 +28,7 @@ def get_input():
 
 def get_sample():
     """Read sample imput instead of real input"""
-    file = os.path.join("./inputs/", inspect.stack()[3].filename.replace(".py", "-sample.txt"))
+    file = os.path.join("./inputs/", inspect.stack()[3].filename.split("/")[-1].replace(".py", "-sample.txt"))
     #file = f"./inputs/{inspect.stack()[3].filename.replace(".py", "-sample.txt")}"
     logger.debug(f"Reading input from: {file}")
     with open(file, "r") as f:
@@ -52,3 +52,12 @@ def aoc_sample(func):
 
     return wrapper
 
+@aoc_sample
+def test_sample(text=""):
+    logger.debug(f"text: {text}") 
+
+def test():
+    test_sample()
+
+if __name__ == "__main__":
+    test()
