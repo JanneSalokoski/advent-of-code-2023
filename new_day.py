@@ -6,8 +6,8 @@ import logging.config
 logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
 log = logging.getLogger("new-day")
 
+import os
 import datetime
-
 import subprocess
 
 import load_input
@@ -44,6 +44,11 @@ def create_input_file(day):
 
 def main():
     day = get_day()
+
+    if os.path.isfile(f"day-{day}.py"):
+        log.critical("new_day.py has already been ran today!")
+        return 0
+
     copy_template(day)
     create_input_file(day)
 
