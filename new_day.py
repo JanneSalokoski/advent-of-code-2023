@@ -8,6 +8,10 @@ log = logging.getLogger("new-day")
 
 import datetime
 
+import subprocess
+
+import load_input
+
 def get_day():
     """ Get todays day-number """
     return datetime.datetime.today().day
@@ -22,27 +26,29 @@ def copy_template(day):
     """ Replace placeholders in template and write it to file """
     template = get_template()
     template = template.replace("XXX", str(day))
-    log.debug("Replaced `XXX` with {day} in template")
+    log.debug(f"Replaced `XXX` with {day} in template")
     
     with open(f"./day-{day}.py", "w") as f:
-        log.debug("Writing template to ./day-{day}.py")
+        log.debug(f"Writing template to ./day-{day}.py")
         f.write(template)
 
 def create_input_file(day):
     """ Create input files for real and sample input """
     with open(f"./inputs/day-{day}.txt", "w") as f:
-        log.debug("Creating input-file to ./inputs/day-{day}.txt")
-        f.write("")
+        log.debug(f"Creating input-file to ./inputs/day-{day}.txt")
+        f.write(load_input.load_input(day))
 
     with open(f"./inputs/day-{day}-sample.txt", "w") as f:
-        log.debug("Creating input-file to ./inputs/day-{day}-sample.txt")
-        f.write("")
+        log.debug(f"Creating input-file to ./inputs/day-{day}-sample.txt")
+        f.write("<<Insert input here>>")
 
 def main():
     day = get_day()
     copy_template(day)
     create_input_file(day)
 
-    log.info("Created script and input files for day {day} succesfully")
+    log.info(f"Created script and input files for day {day} succesfully")
+
+    subprocess.run(["./edit.sh", f"{day}"])
 
 main()
