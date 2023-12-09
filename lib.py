@@ -10,29 +10,30 @@ def timer(func):
     """Time the execution of a function"""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        t1 = time.time()
+        t1 = time.perf_counter()
         result = func(*args, **kwargs)
-        t2 = time.time()
+        t2 = time.perf_counter()
 
         logger.debug(f"Function {func.__name__!r} executed in {(t2-t1):.4f}s")
         return result
     return wrapper
 
-def get_input():
-    """Read input for the days script from file and strip it"""
-    file = os.path.join("./inputs/", inspect.stack()[3].filename.split("/")[-1].replace(".py", ".txt"))
-    #file = f"./inputs/{inspect.stack()[3].filename.replace(".py", ".txt")}"
-    logger.debug(f"Reading input from: {file}")
+@functools.cache
+def read_file(file):
     with open(file, "r") as f:
         return f.read().strip()
 
-def get_sample():
-    """Read sample imput instead of real input"""
-    file = os.path.join("./inputs/", inspect.stack()[3].filename.split("/")[-1].replace(".py", "-sample.txt"))
-    #file = f"./inputs/{inspect.stack()[3].filename.replace(".py", "-sample.txt")}"
+def get_input():
+    """Read input for the days script from file and strip it"""
+    file = os.path.join("./inputs/", inspect.stack()[3].filename.split("/")[-1].replace(".py", ".txt"))
     logger.debug(f"Reading input from: {file}")
-    with open(file, "r") as f:
-        return f.read().strip()
+    return read_file(file)
+
+def get_sample():
+    """Read sample input instead of real input"""
+    file = os.path.join("./inputs/", inspect.stack()[3].filename.split("/")[-1].replace(".py", "-sample.txt"))
+    logger.debug(f"Reading input from: {file}")
+    return read_file(file)
 
 def aoc_input(func):
     """Call `func` with aoc-input as an argument"""
